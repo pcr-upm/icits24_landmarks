@@ -59,6 +59,9 @@ class ICITS24Landmarks(Alignment):
     def train(self, anns_train, anns_valid):
         print('Train model')
 
+
+
+
     '''
     Load pretrained model
     as set in the arguments.
@@ -68,8 +71,11 @@ class ICITS24Landmarks(Alignment):
         # Set up a neural network to train
         print('Load model')
         if mode is Modes.TEST:
-            saved_model = self.path + 'data/' + self.database + '/' + self.trained_model_name + '.pt'
+            self.saved_model = self.path + 'data/' + self.database + '/' + self.trained_model_name + '.pt'
             # TODO - Load the model
+            model = torch.load(saved_model, map_location="cpu")
+        
+        return model
 
     def process(self, ann, pred):
         import itertools
