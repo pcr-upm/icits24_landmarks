@@ -8,10 +8,14 @@ RUN chmod 400 /root/.ssh/id_rsa
 # Make sure your domain is accepted
 RUN touch /root/.ssh/known_hosts
 RUN ssh-keyscan github.com >> /root/.ssh/known_hosts
+
+
 # Download the computer vision framework
-RUN git clone git@github.com:pcr-upm/images_framework.git images_framework
-RUN git clone git@github.com:bobetocalo/icits24_landmarks.git images_framework/alignment/icits24_landmarks
-ADD data /images_framework/alignment/icits24_landmarks/data
+# RUN git clone git@github.com:pcr-upm/images_framework.git images_framework
+# RUN git clone git@github.com:bobetocalo/icits24_landmarks.git images_framework/alignment/icits24_landmarks
+# ADD data /images_framework/alignment/icits24_landmarks/data
+
+
 
 # Copy the repository from the previous image
 FROM nvcr.io/nvidia/cuda:11.2.2-cudnn8-devel-ubuntu20.04
@@ -21,7 +25,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get -y update && apt-get install -y build-essential wget cmake libgl1-mesa-glx libsm6 libxext6 libglib2.0-0
 RUN mkdir /home/username
 WORKDIR /home/username
-COPY --from=intermediate /images_framework /home/username/images_framework
+COPY --from=intermediate /images_framework /home/juancastrillo/images_framework
 LABEL maintainer="roberto.valle@upm.es"
 # Setup conda environment
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /home/username/miniconda.sh

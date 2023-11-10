@@ -8,6 +8,7 @@ import cv2
 import dlib
 import numpy as np
 from images_framework.src.alignment import Alignment
+from images_framework.alignment.icits24_landmarks.src.models.get_model import get_model
 os.environ['PYTHONHASHSEED'] = '0'
 np.random.seed(42)
 
@@ -20,27 +21,55 @@ class ICITS24Landmarks(Alignment):
         super().__init__()
         self.path = path
         self.model = None
+        self.database = ""
 
+    '''
+    model
+        ConvNeXt 
+            convnext_atomic
+        MobileNets
+            mobilenetv2
+        MobileViTs
+            EdgeNeXt
+                edgenext_small
+                ...
+            EfficientFormer
+                efficientformerv2_(L, S1, S2, S0)
+    '''
     def parse_options(self, params):
         super().parse_options(params)
         import argparse
         parser = argparse.ArgumentParser(prog='ICITS24Landmarks', add_help=False)
         parser.add_argument('--gpu', dest='gpu', type=int, action='append',
                             help='GPU ID (negative value indicates CPU).')
+        parser.add_argument('--model', dest='model_name', type=str, action='append',
+                            help='Model name from the list.')
+        parser.add_argument('--trained_model', dest='trained_model', type=str, action='append',
+                            required=False, default="",
+                            help='File containing the trained model.')
+
+
         args, unknown = parser.parse_known_args(params)
         print(parser.format_usage())
         self.gpu = args.gpu
+        self.model_name = args.model_name
+        self.model = self.get_model(self.model_name)
+        self.trained_model_name = args.trained_model
 
     def train(self, anns_train, anns_valid):
         print('Train model')
 
+    '''
+    Load pretrained model
+    as set in the arguments.
+    '''
     def load(self, mode):
         from images_framework.src.constants import Modes
         # Set up a neural network to train
         print('Load model')
         if mode is Modes.TEST:
-            dat_file = self.path + 'data/' + self.database + '/' + self.database + '_6.dat'
-            self.model = dlib.shape_predictor(dat_file.lower())
+            saved_model = self.path + 'data/' + self.database + '/' + self.trained_model_name + '.pt'
+            # TODO - Load the model
 
     def process(self, ann, pred):
         import itertools
