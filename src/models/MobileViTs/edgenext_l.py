@@ -131,8 +131,7 @@ def edgenext_l_custom_d(num_landmarks=98, spatial_attention=False):
     return model
 
 '''
-(e.) (135ms, 41ms)
-- More STDA blocks!! 
+More STDA blocks!! (e.) (135ms, 41ms)
 - 5, 4, 2, 1 Attention blocks
 - 1 Conv block first 2 stages + 2 Conv block / Last 2 stages
 '''
@@ -149,7 +148,7 @@ def edgenext_l_custom_e(num_landmarks=98, spatial_attention=False):
     return model
 
 '''
-Same as (e.) but no convolutions 
+Same as (e.) but no convolutions (f.)
 (80ms 23ms)
 '''
 def edgenext_l_custom_f(num_landmarks=98, spatial_attention=False):
@@ -196,7 +195,9 @@ class EdgeNeXt(nn.Module):
         else:
             self.pos_embd = None
         
-        # Downsampling conv layers
+        ''' 
+        Downsampling conv layers
+        '''
         self.downsample_layers = nn.ModuleList()  
         stem = nn.Sequential(
             nn.Conv2d(in_chans, depth_stage[0], kernel_size=4, stride=4), # 4x4
@@ -219,6 +220,9 @@ class EdgeNeXt(nn.Module):
         )
         self.downsample_layers.append(downsample_layer3)
 
+        '''
+        STAGES!!
+        '''
         self.stages = nn.ModuleList()  
         dp_rates = [x.item() for x in torch.linspace(0, drop_path_rate, sum(num_blocks_stage))]
         cur = 0

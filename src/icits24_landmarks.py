@@ -122,19 +122,25 @@ class ICITS24Landmarks(Alignment):
     '''
     def load(self, mode):
         from images_framework.src.constants import Modes
-        # Set up a neural network to train
-        print('Load model')
+        print('Loading model...')
         if mode is Modes.TEST:
             self.saved_model = self.path + 'data/' + self.database + '/' + self.trained_model_name + '.pt'
-            # TODO - Load the model
             model = torch.load(self.saved_model, map_location="cpu")
         else:
             if self.trained_model_name:
+                self.saved_model = self.path + 'data/' + self.database + '/' + self.trained_model_name + '.pt'
                 model = torch.load(self.saved_model)#, map_location="cpu")
             else:
                 model = get_model(self.model_name)
         return model
+    
+    # TODO - Add method to export to mobile
+    def export_to_mobile(self):
+        pass
 
+    # TODO - Add notebook to evaluate latency
+
+    # TODO - Ni idea de como tratar esto, tendré que ver como cuadrar ids de landmarks a la imagen.
     def process(self, ann, pred):
         import itertools
         from images_framework.src.datasets import Database
