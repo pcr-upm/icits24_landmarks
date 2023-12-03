@@ -9,7 +9,7 @@ class SDTAEncoder(nn.Module):
     def __init__(self, dim, drop_path=0., layer_scale_init_value=1e-6, expan_ratio=4,
                  use_pos_emb=True, num_heads=8, qkv_bias=True, attn_drop=0., drop=0., 
                  scales=1, # the s number of channel splits
-                 spatial_opt=False # Mine to determine is operate in spatial dimension or regular XCA
+                 use_spatial_attention=False # Mine to determine is operate in spatial dimension or regular XCA
                  ):
         super().__init__()
         width = max(int(math.ceil(dim / scales)), int(math.floor(dim // scales)))
@@ -27,7 +27,7 @@ class SDTAEncoder(nn.Module):
         self.norm_xca = LayerNorm(dim, eps=1e-6)
         self.gamma_xca = nn.Parameter(layer_scale_init_value * torch.ones(dim),
                                       requires_grad=True) if layer_scale_init_value > 0 else None
-        if spatial_opt:
+        if use_spatial_attention:
             self.xca = XSA(dim, num_heads=num_heads, qkv_bias=qkv_bias, attn_drop=attn_drop, proj_drop=drop)
         else:
             self.xca = XCA(dim, num_heads=num_heads, qkv_bias=qkv_bias, attn_drop=attn_drop, proj_drop=drop)

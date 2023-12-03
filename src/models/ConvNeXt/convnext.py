@@ -157,10 +157,10 @@ model_urls = {
     "convnext_xlarge_22k": "https://dl.fbaipublicfiles.com/convnext/convnext_xlarge_22k_224.pth",
 }
 
-@register_model
-def convnext_ultratomic(**kwargs):
-    model = ConvNeXt(depths=[3, 3, 9, 3], dims=[48, 96, 160, 304], **kwargs)
-    return model
+# @register_model
+# def convnext_ultratomic(**kwargs):
+#     model = ConvNeXt(depths=[3, 3, 9, 3], dims=[48, 96, 160, 304], **kwargs)
+#     return model
 
 @register_model
 def convnext_atomic(**kwargs):

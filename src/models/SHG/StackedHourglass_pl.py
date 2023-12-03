@@ -4,7 +4,7 @@ import pytorch_lightning as pl
 from .StackedHourglass import create_StackedHG
 
 
-class LitSHG(pl.LightningModule):
+class LitSHGPL(pl.LightningModule):
     """ Pytorch Lightning wrapper to the Stacked Hourglass network """
     def __init__(self, num_modules, num_landmarks, batch_size=1, lr=0.001, weight_decay=0):
         super().__init__()
