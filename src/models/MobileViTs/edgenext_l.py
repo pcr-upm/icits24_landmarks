@@ -6,14 +6,6 @@ from .layers import LayerNorm, PositionalEncodingFourier, LandmarksLayer
 from .sdta_encoder import SDTAEncoder
 from .conv_encoder import ConvEncoder
 
-class EdgeNeXt_Models(StrEnum):
-    Base = "edgenext_base"
-    Small = "edgenext_small"
-    Spatial_Attention_Small = "edgenext_custom_a"
-
-
-
-
 
 '''
 Standart EdgeNeXt Base with Dense final layer

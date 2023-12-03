@@ -1,6 +1,6 @@
 from torch import nn, optim
 import pytorch_lightning as pl
-from .edgenext_l import edgenext_l_base, edgenext_l_small
+from .edgenext_l import edgenext_l_base, edgenext_l_custom_a, edgenext_l_custom_b, edgenext_l_custom_c, edgenext_l_custom_d, edgenext_l_custom_e, edgenext_l_custom_f, edgenext_l_small
 
 class EdgeNextPL(pl.LightningModule):
     """ Pytorch Lightning wrapper for the EdgeNext Base network """
@@ -10,6 +10,18 @@ class EdgeNextPL(pl.LightningModule):
             self.model = edgenext_l_base(num_landmarks=num_landmarks)
         elif size == "small":
             self.model = edgenext_l_small(num_landmarks=num_landmarks)
+        elif size == "custom_a":
+            self.model = edgenext_l_custom_a(num_landmarks=num_landmarks)
+        elif size == "custom_b":
+            self.model = edgenext_l_custom_b(num_landmarks=num_landmarks)
+        elif size == "custom_c":
+            self.model = edgenext_l_custom_c(num_landmarks=num_landmarks)
+        elif size == "custom_d":
+            self.model = edgenext_l_custom_d(num_landmarks=num_landmarks)
+        elif size == "custom_e":
+            self.model = edgenext_l_custom_e(num_landmarks=num_landmarks)
+        elif size == "custom_f":
+            self.model = edgenext_l_custom_f(num_landmarks=num_landmarks)
         self.batch_size = batch_size
         self.lr = lr
         self.weight_decay = weight_decay
