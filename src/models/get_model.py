@@ -1,6 +1,6 @@
 from .ConvNeXt.convnext_pl import ConvNeXtPL
 from .SHG.StackedHourglass_pl import LitSHGPL
-from .MobileViTs.edgenext_l_pl import EdgeNextPL
+from .MobileViTs.EdgeNeXt.edgenext_l_pl import EdgeNextPL
 from .MobileNets.mobilenetv2_pl import MobileNetV2PL 
 
 def get_model(name:str, num_landmarks = 98, **hparams):

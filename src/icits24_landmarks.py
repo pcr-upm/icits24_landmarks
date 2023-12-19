@@ -136,16 +136,27 @@ class ICITS24Landmarks(Alignment):
     
     # TODO - Add method to export to mobile
     def export_to_mobile(self):
-        pass
+        self.model.eval()
+        example = torch.rand(1, 3, 128, 128)
+        traced_script_module = torch.jit.trace(self.model, example)
+        traced_script_module_optimized = optimize_for_mobile(traced_script_module)
+        traced_script_module_optimized._save_for_lite_interpreter("app/src/main/assets/model.ptl")
+
 
     # TODO - Add notebook to evaluate latency
 
     # TODO - Ni idea de como tratar esto, tendré que ver como cuadrar ids de landmarks a la imagen.
     def process(self, ann, pred):
+        '''
+        
+        ann: {id1: (x1, y1), ... }
+        pred: {}
+        '''
         import itertools
-        from images_framework.src.datasets import Database
-        from images_framework.src.annotations import GenericLandmark
-        from images_framework.alignment.landmarks import lps
+        from src.datasets import Database
+        from src.annotations import GenericLandmark
+        from alignment.landmarks import lps
+
         datasets = [subclass().get_names() for subclass in Database.__subclasses__()]
         idx = [datasets.index(subset) for subset in datasets if self.database in subset]
         parts = Database.__subclasses__()[idx[0]]().get_landmarks()

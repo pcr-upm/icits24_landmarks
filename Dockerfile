@@ -25,7 +25,7 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apt-get -y update && apt-get install -y build-essential wget cmake libgl1-mesa-glx libsm6 libxext6 libglib2.0-0
 RUN mkdir /home/username
 WORKDIR /home/username
-COPY --from=intermediate /images_framework /home/juancastrillo/images_framework
+# COPY --from=intermediate /images_framework /home/juancastrillo/images_framework
 LABEL maintainer="roberto.valle@upm.es"
 # Setup conda environment
 RUN wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /home/username/miniconda.sh
