@@ -2,8 +2,8 @@
 
 #### Requisites
 - images_framework https://github.com/pcr-upm/images_framework
-- SciPy
-- dlib
+- torch
+- scipy
 
 #### Installation
 This repository must be located inside the following directory:

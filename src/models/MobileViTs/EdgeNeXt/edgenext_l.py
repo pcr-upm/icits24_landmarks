@@ -1,8 +1,7 @@
-from enum import StrEnum, auto
 import torch
 from torch import nn
 from timm.models.layers import trunc_normal_
-from .layers import LayerNorm, PositionalEncodingFourier, LandmarksLayer
+from ..layers import LayerNorm, PositionalEncodingFourier, LandmarksLayer
 from .sdta_encoder import SDTAEncoder
 from .conv_encoder import ConvEncoder
 

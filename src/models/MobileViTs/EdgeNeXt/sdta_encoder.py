@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from timm.models.layers import DropPath
-from .layers import LayerNorm, PositionalEncodingFourier
+from ..layers import LayerNorm, PositionalEncodingFourier
 import math
 
 
@@ -14,7 +14,7 @@ class SDTAEncoder(nn.Module):
         super().__init__()
         width = max(int(math.ceil(dim / scales)), int(math.floor(dim // scales)))
         self.width = width
-        self.num = 1 if scales == 1 else (scales - 1)
+        self.nums = 1 if scales == 1 else (scales - 1)
 
         convs = []
         for _ in range(self.nums):

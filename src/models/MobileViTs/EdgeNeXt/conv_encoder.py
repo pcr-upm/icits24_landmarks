@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from timm.models.layers import DropPath
-from .layers import LayerNorm
+from ..layers import LayerNorm
 
 
 class ConvEncoder(nn.Module):
