@@ -33,5 +33,5 @@ ENV PATH /home/username/conda/envs/icits24/bin:/home/username/conda/bin:$PATH
 # Make RUN commands use the new environment (source activate icits24)
 SHELL ["conda", "run", "-n", "icits24", "/bin/bash", "-c"]
 # Install dependencies
-RUN pip install tqdm Pillow
-RUN pip install opencv-python opencv-contrib-python torch scipy
+RUN pip install tqdm Pillow numpy opencv-python rasterio scipy
+RUN pip install torch
