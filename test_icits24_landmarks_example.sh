@@ -2,7 +2,7 @@
 # echo 'Using Docker to start the container and run tests ...'
 sudo docker build --force-rm --build-arg SSH_PRIVATE_KEY="$(cat ~/.ssh/id_rsa)" -t icits24_landmarks_image .
 sudo docker volume create --name icits24_landmarks_volume
-sudo docker run --name icits24_landmarks_container -v icits24_landmarks_volume:/home/username --rm -it -d icits24_landmarks_image bash
+sudo docker run --name icits24_landmarks_container -v icits24_landmarks_volume:/home/username --rm -it --gpus all -d icits24_landmarks_image bash
 sudo docker exec -w /home/username/ icits24_landmarks_container python images_framework/alignment/icits24_landmarks/test/icits24_landmarks_test.py --input-data images_framework/alignment/icits24_landmarks/test/example.tif --database wflw --gpu 0 --backbone EdgeNeXt --save-image
 sudo docker stop icits24_landmarks_container
 echo 'Transferring data from docker container to your local machine ...'
