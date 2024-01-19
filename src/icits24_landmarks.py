@@ -28,6 +28,9 @@ class ICITS24Landmarks(Alignment):
         self.model = None
         self.device = None
         self.backbone = None
+        self.batch_size = None
+        self.epochs = None
+        self.patience = None
         self.width = 128
         self.height = 128
 
@@ -39,14 +42,32 @@ class ICITS24Landmarks(Alignment):
                             help='GPU ID (negative value indicates CPU).')
         parser.add_argument('--backbone', dest='backbone', required=True, choices=[x.value for x in Backbone],
                             help='Select backbone model.')
+        parser.add_argument('--batch-size', dest='batch_size', type=int, default=16,
+                            help='Number of images in each mini-batch.')
+        parser.add_argument('--epochs', dest='epochs', type=int, default=100000,
+                            help='Number of sweeps over the dataset to train.')
+        parser.add_argument('--patience', dest='patience', type=int, default=40,
+                            help='Number of epochs with no improvement after which training will be stopped.')
         args, unknown = parser.parse_known_args(unknown)
         print(parser.format_usage())
         mode_gpu = torch.cuda.is_available() and -1 not in args.gpu
         self.device = torch.device('cuda:{}'.format(args.gpu[0]) if mode_gpu else 'cpu')
         self.backbone = args.backbone
+        self.batch_size = args.batch_size
+        self.epochs = args.epoch
+        self.patience = args.patience
 
     def train(self, anns_train, anns_valid):
-        print('Training ...')
+        import pytorch_lightning as pl
+        from pytorch_lightning import loggers as pl_loggers
+        from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
+        print('Train model')
+        # Train the model
+        loggers = [pl_loggers.TensorBoardLogger(save_dir=self.path + 'data/logs', default_hp_metric=False)]
+        checkpoint_callback = ModelCheckpoint(dirpath=self.path + 'data/ckpt_path', filename='{epoch}-{val_loss:.5f}', monitor='val_loss', save_last=True, save_top_k=1)
+        early_stopping = EarlyStopping(monitor="val_loss", mode="min", patience=self.patience)
+        trainer = pl.Trainer(logger=loggers, accelerator='auto', devices=self.device, enable_progress_bar=True, max_epochs=self.epochs, precision=16, deterministic=False, callbacks=[checkpoint_callback, early_stopping])
+        trainer.fit(model=self.model, train_dataloaders=anns_train, val_dataloaders=anns_valid)
 
     def load(self, mode):
         from images_framework.src.constants import Modes
@@ -113,3 +134,11 @@ class ICITS24Landmarks(Alignment):
                     pt_x = pt[0] * (bbox_width/self.width) + bbox_enlarged[0]
                     pt_y = pt[1] * (bbox_height/self.height) + bbox_enlarged[1]
                     obj_pred.add_landmark(GenericLandmark(label, lp, (pt_x, pt_y), True), lps[type(lp)])
+
+    def export_to_mobile(self):
+        from torch.utils.mobile_optimizer import optimize_for_mobile
+        example = torch.rand(1, 3, self.width, self.height)
+        script_module = torch.jit.trace(self.model, example)
+        # Export mobile interpreter version model (compatible with mobile interpreter)
+        script_module_optimized = optimize_for_mobile(script_module)
+        script_module_optimized._save_for_lite_interpreter("app/src/main/assets/model.ptl")

@@ -2,8 +2,10 @@
 
 #### Requisites
 - images_framework https://github.com/pcr-upm/images_framework
-- torch
 - scipy
+- torch
+- torchvision
+- timm
 
 #### Installation
 This repository must be located inside the following directory:
