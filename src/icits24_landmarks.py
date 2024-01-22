@@ -54,20 +54,35 @@ class ICITS24Landmarks(Alignment):
         self.device = torch.device('cuda:{}'.format(args.gpu[0]) if mode_gpu else 'cpu')
         self.backbone = args.backbone
         self.batch_size = args.batch_size
-        self.epochs = args.epoch
+        self.epochs = args.epochs
         self.patience = args.patience
 
     def train(self, anns_train, anns_valid):
+        def get_dataloader(anns, is_train):
+            from torch.utils.data import DataLoader
+            dataloader = DataLoader(anns, batch_size=self.batch_size, shuffle=is_train, num_workers=4, pin_memory=True, drop_last=True)
+            return dataloader
+
         import pytorch_lightning as pl
         from pytorch_lightning import loggers as pl_loggers
         from pytorch_lightning.callbacks import ModelCheckpoint, EarlyStopping
-        print('Train model')
+        # Pytorch lightning wrapper
+        if self.backbone == 'EdgeNeXt':
+            from .models.MobileViTs.EdgeNeXt.edgenext_l_pl import EdgeNextPL
+            self.model = EdgeNextPL(num_landmarks=98, size='base', batch_size=self.batch_size).to(self.device)
+        elif self.backbone == 'MobileNetV2':
+            from .models.MobileNets.mobilenetv2_pl import MobileNetV2PL
+            self.model = MobileNetV2PL(num_landmarks=98, batch_size=self.batch_size).to(self.device)
+        # Prepare dataloaders
+        dl_train = get_dataloader(anns_train, is_train=True)
+        dl_valid = get_dataloader(anns_valid, is_train=False)
         # Train the model
+        print('Train model')
         loggers = [pl_loggers.TensorBoardLogger(save_dir=self.path + 'data/logs', default_hp_metric=False)]
         checkpoint_callback = ModelCheckpoint(dirpath=self.path + 'data/ckpt_path', filename='{epoch}-{val_loss:.5f}', monitor='val_loss', save_last=True, save_top_k=1)
         early_stopping = EarlyStopping(monitor="val_loss", mode="min", patience=self.patience)
-        trainer = pl.Trainer(logger=loggers, accelerator='auto', devices=self.device, enable_progress_bar=True, max_epochs=self.epochs, precision=16, deterministic=False, callbacks=[checkpoint_callback, early_stopping])
-        trainer.fit(model=self.model, train_dataloaders=anns_train, val_dataloaders=anns_valid)
+        trainer = pl.Trainer(logger=loggers, accelerator='auto', devices='auto', enable_progress_bar=True, max_epochs=self.epochs, precision=16, deterministic=False, callbacks=[checkpoint_callback, early_stopping])
+        trainer.fit(model=self.model, train_dataloaders=dl_train, val_dataloaders=dl_valid)
 
     def load(self, mode):
         from images_framework.src.constants import Modes

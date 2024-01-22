@@ -35,3 +35,4 @@ SHELL ["conda", "run", "-n", "icits24", "/bin/bash", "-c"]
 # Install dependencies
 RUN pip install tqdm Pillow numpy opencv-python rasterio scipy
 RUN pip install torch torchvision timm
+# RUN pip install scikit-learn pytorch-lightning
