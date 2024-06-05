@@ -136,7 +136,7 @@ def main():
     composite.add(sr)
     composite.parse_options(unknown)
     composite.load(Modes.TEST)
-    dirname = 'output/images/'
+    dirname = 'images_framework/output/images/'
     viewer = Viewer('icits24_landmarks_test')
     Path(dirname).mkdir(parents=True, exist_ok=True)
 
