@@ -1,6 +1,6 @@
 from torch import nn, optim
 import pytorch_lightning as pl
-from images_framework.alignment.icits24_landmarks.src.models.ConvNeXt.convnext import convnext_atomic
+from src.models.ConvNeXt.convnext import convnext_atomic
 
 class ConvNeXtPL(pl.LightningModule):
     """ Pytorch Lightning wrapper for the EdgeNext Base network """

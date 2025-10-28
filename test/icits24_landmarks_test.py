@@ -11,6 +11,7 @@ import json
 import copy
 import argparse
 import numpy as np
+import importlib.util
 from pathlib import Path
 from scipy.spatial.transform import Rotation
 from images_framework.src.constants import Modes
@@ -20,7 +21,7 @@ from images_framework.src.annotations import GenericGroup, GenericImage, PersonO
 from images_framework.src.viewer import Viewer
 from images_framework.src.utils import load_geoimage
 from images_framework.alignment.landmarks import lps
-from images_framework.alignment.icits24_landmarks.src.icits24_landmarks import ICITS24Landmarks
+from src.icits24_landmarks import ICITS24Landmarks
 
 image_extensions = ('bmp', 'jpg', 'jpeg', 'png', 'tif', 'tiff')
 video_extensions = ('mp4', 'avi', 'mkv')
@@ -132,12 +133,14 @@ def main():
 
     # Load vision components
     composite = Composite()
-    sr = ICITS24Landmarks('images_framework/alignment/icits24_landmarks/')
+    sr = ICITS24Landmarks('')
     composite.add(sr)
     composite.parse_options(unknown)
     composite.load(Modes.TEST)
-    dirname = 'images_framework/output/images/'
+    spec = importlib.util.find_spec('images_framework')
+    output_path = os.path.join('images_framework' if spec is None else os.path.dirname(spec.origin), 'output')
     viewer = Viewer('icits24_landmarks_test')
+    dirname = os.path.join(output_path, 'images/')
     Path(dirname).mkdir(parents=True, exist_ok=True)
 
     # Process frame and show results

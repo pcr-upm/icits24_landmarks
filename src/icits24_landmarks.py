@@ -4,6 +4,8 @@ __author__ = 'Juan Castrillo'
 __email__ = 'juan.castrillo@alumnos.upm.es'
 
 import os
+import sys
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..')))
 import torch
 import numpy as np
 from enum import Enum
