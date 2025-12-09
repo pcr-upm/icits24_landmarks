@@ -20,7 +20,7 @@ from images_framework.src.categories import Category as Oi
 from images_framework.src.annotations import GenericGroup, GenericImage, PersonObject, GenericLandmark, GenericCategory
 from images_framework.src.viewer import Viewer
 from images_framework.src.utils import load_geoimage
-from images_framework.alignment.landmarks import lps
+from images_framework.regression.alignment.landmarks import lps
 from src.icits24_landmarks import ICITS24Landmarks
 
 image_extensions = ('bmp', 'jpg', 'jpeg', 'png', 'tif', 'tiff')

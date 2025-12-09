@@ -110,7 +110,7 @@ class ICITS24Landmarks(Alignment):
         # import itertools
         from images_framework.src.datasets import Database
         from images_framework.src.annotations import GenericLandmark
-        from images_framework.alignment.landmarks import lps
+        from images_framework.regression.alignment.landmarks import lps
         datasets = [subclass().get_names() for subclass in Database.__subclasses__()]
         idx = [datasets.index(subset) for subset in datasets if self.database in subset]
         parts = Database.__subclasses__()[idx[0]]().get_landmarks()
