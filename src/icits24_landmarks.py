@@ -9,7 +9,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__f
 import torch
 import numpy as np
 from enum import Enum
-from images_framework.src.alignment import Alignment
+from pcr_framework.src.alignment import Alignment
 os.environ['PYTHONHASHSEED'] = '0'
 np.random.seed(42)
 
@@ -87,7 +87,7 @@ class ICITS24Landmarks(Alignment):
         trainer.fit(model=self.model, train_dataloaders=dl_train, val_dataloaders=dl_valid)
 
     def load(self, mode):
-        from images_framework.src.constants import Modes
+        from pcr_framework.src.constants import Modes
         # Set up a neural network to train
         print('Load model')
         if self.backbone == 'EdgeNeXt':
@@ -108,9 +108,9 @@ class ICITS24Landmarks(Alignment):
     def process(self, ann, pred):
         import cv2
         # import itertools
-        from images_framework.src.datasets import Database
-        from images_framework.src.annotations import GenericLandmark
-        from images_framework.regression.alignment.landmarks import lps
+        from pcr_framework.src.datasets import Database
+        from pcr_framework.src.annotations import GenericLandmark
+        from pcr_framework.regression.alignment.landmarks import lps
         datasets = [subclass().get_names() for subclass in Database.__subclasses__()]
         idx = [datasets.index(subset) for subset in datasets if self.database in subset]
         parts = Database.__subclasses__()[idx[0]]().get_landmarks()

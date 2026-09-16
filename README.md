@@ -1,10 +1,7 @@
 # Landmark Detection using ICITS (2024)
 
 #### Requisites
-- images-framework
-- torch
-- torchvision
-- timm
+The required dependencies are installed in the [`Dockerfile`](./Dockerfile#L33).
 
 #### Usage
 ```
