@@ -5,7 +5,7 @@ __email__ = 'juan.castrillo@alumnos.upm.es'
 
 import os
 import sys
-sys.path.append(os.getcwd())
+sys.path.insert(0, os.getcwd())
 import cv2
 import json
 import copy
@@ -71,12 +71,6 @@ def process_frame(composite, filename, show_viewer, save_image, viewer, delay, d
                 lp = next((elem for part in lps.keys() for elem in part if elem.value == name), None)
                 obj.add_landmark(GenericLandmark(lnd['label'], lp, lnd['pos'], lnd['visible'], lnd['confidence']), lps[type(lp)])
             img_ann.add_object(obj)
-    else:
-        from pcr_framework.detection.ssd16_detection.src.ssd16_detection import SSD16Detection
-        sd = SSD16Detection('pcr_framework/detection/ssd16_detection/')
-        sd.parse_options(['--database', 'aflw'])
-        sd.load(Modes.TEST)
-        sd.process(ann, pred)
     ann.add_image(img_ann)
     # Process frame and show results
     ticks = cv2.getTickCount()
@@ -101,7 +95,6 @@ def main():
     """
     ICITS 2024 test script.
     """
-    print('OpenCV ' + cv2.__version__)
     unknown, input_data, show_viewer, save_image = parse_options()
 
     # Determine if we get the images from a camera, video or directory
