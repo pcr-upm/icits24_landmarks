@@ -1,7 +1,7 @@
 # Landmark Detection using ICITS (2024)
 
 #### Requisites
-The required dependencies are installed in the [`Dockerfile`](./Dockerfile#L33).
+The required dependencies are installed in the [`Dockerfile`](./Dockerfile#L32).
 
 #### Usage
 ```
