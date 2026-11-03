@@ -109,7 +109,7 @@ class ICITS24Landmarks(Alignment):
         import cv2
         # import itertools
         from pcr_framework.src.datasets import Database
-        from pcr_framework.src.annotations import GenericLandmark
+        from pcr_framework.src.annotations import PersonObject, GenericLandmark
         from pcr_framework.regression.alignment.landmarks import lps
         datasets = [subclass().get_names() for subclass in Database.__subclasses__()]
         idx = [datasets.index(subset) for subset in datasets if self.database in subset]
@@ -120,6 +120,8 @@ class ICITS24Landmarks(Alignment):
             # Load image
             image = cv2.imread(img_pred.filename, cv2.IMREAD_COLOR)
             for obj_pred in img_pred.objects:
+                if not isinstance(obj_pred, PersonObject):
+                    continue
                 # Squared bbox required
                 bbox_width, bbox_height = obj_pred.bb[2]-obj_pred.bb[0], obj_pred.bb[3]-obj_pred.bb[1]
                 max_size = max(bbox_width, bbox_height)
